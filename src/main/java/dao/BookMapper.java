@@ -54,9 +54,23 @@ public interface BookMapper {
             @Result(property = "bookName",column = "book_name"),
             @Result(property = "price",column = "price")
     })
-
     @Select("SELECT * FROM book WHERE book_name = #{bookName}")
     BookDO selectByName(String bookName);
+
+    /**
+     * 通过名字模糊查询
+     * @author xuxiaohang
+     * @date 2018/3/2 下午3:06
+     * @param fuzzyName
+     * @return java.util.List<entity.BookDO>
+     */
+    @Results(id="result",value = {
+            @Result(property = "bookId",column = "book_id",id=true),
+            @Result(property = "bookName",column = "book_name"),
+            @Result(property = "price",column = "price")
+    })
+    @Select("SELECT * FROM book WHERE book_name like #{bookName}")
+    List<BookDO> selectByNameFuzzy(String fuzzyName);
 
     /**    
      * 通过id删除
@@ -66,4 +80,5 @@ public interface BookMapper {
      * @return void  
      */  
     void updateById(BookDO book);
+
 }

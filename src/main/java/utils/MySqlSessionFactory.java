@@ -1,7 +1,5 @@
 package utils;
 
-import dao.BookMapper;
-import entity.BookDO;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -9,7 +7,6 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 
 import java.io.InputStream;
-import java.util.List;
 
 /**
  * 通过输入流创建SqlSessionFactory

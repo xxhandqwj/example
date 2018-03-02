@@ -2,40 +2,39 @@ package service;
 
 import dao.BookMapper;
 import entity.BookDO;
-import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import utils.MySqlSessionFactory;
 
-import java.io.InputStream;
 import java.util.List;
-
+/**
+ * 演示mybatis
+ * @author xuxiaohang
+ * @date 2018/3/2 下午3:42
+ */
 public class MainClass {
     public static void main(String[] args){
         SqlSession session=null;
         try{
-        MySqlSessionFactory mySqlSessionFactory=new MySqlSessionFactory();
-        session=mySqlSessionFactory.getSession();
-        BookMapper mapper = session.getMapper(BookMapper.class);
+            MySqlSessionFactory mySqlSessionFactory=new MySqlSessionFactory();
+            session=mySqlSessionFactory.getSession();
+            BookMapper mapper = session.getMapper(BookMapper.class);
+            BookDO book =new BookDO();
+            book.setBookId("8");
+            book.setBookName("Thinking in JavaScript");
+            book.setPrice(68.0);
 
-//       insert(mapper);
-//       session.commit();
+//            insert(mapper,session,book);
 
-         List<BookDO> books = mapper.selectAll();
-         System.out.println(books);
+            selectAll(mapper);
 
-         BookDO bookDO=mapper.selectById(8);
-         System.out.println("selectById:"+bookDO);
+            selectById(mapper,8);
 
-         bookDO=mapper.selectByName("Thinking in Java");
+            selectByName(mapper,"Thinking in Java");
 
-         System.out.println("selectByName:"+bookDO);
+            selectByFuzzyName(mapper,"Java");
 
-//        updateById("8",mapper);
-//        session.commit();
-//        books = mapper.selectAll();
-//        System.out.println(books);
+//            updateById(book,mapper,session);
+            selectAll(mapper);
 
         }catch(Exception e){
             e.printStackTrace();
@@ -47,21 +46,33 @@ public class MainClass {
         }
     }
 
-    public  static void insert(BookMapper mapper){
-        BookDO book =new BookDO();
-        book.setBookName("Thinking in JavaScript");
-        book.setPrice(68.0);
+    public  static void insert(BookMapper mapper,SqlSession session,BookDO book){
         mapper.saveBook(book);
-        book.setBookName("Thinking in C++");
-        book.setPrice(60.0);
-        mapper.saveBook(book);
+        session.commit();
 
     }
-    public static void updateById(String id,BookMapper mapper){
-        BookDO book=new BookDO();
-        book.setBookId(id);
-        book.setBookName("Think in python");
-        book.setPrice(49.0);
+    public static void updateById(BookDO book,BookMapper mapper,SqlSession session){
         mapper.updateById(book);
+        session.commit();
+    }
+
+    public static void selectAll(BookMapper mapper){
+        List<BookDO> books=mapper.selectAll();
+        System.out.println(books);
+    }
+
+    public static void selectById(BookMapper mapper,Integer id){
+        BookDO bookDO=mapper.selectById(id);
+        System.out.println("selectById:"+bookDO);
+
+    }
+
+    public static void selectByName(BookMapper mapper,String bookName){
+        BookDO bookDO=mapper.selectByName(bookName);
+        System.out.println(bookDO);
+    }
+    public static void selectByFuzzyName(BookMapper mapper,String fuzzyBookName){
+        List<BookDO> books=mapper.selectByNameFuzzy("%"+fuzzyBookName+"%");
+        System.out.println(books);
     }
 }
