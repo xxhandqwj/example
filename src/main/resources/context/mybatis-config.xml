@@ -15,9 +15,9 @@
         </environment>
     </environments>
     <mappers>
-        <mapper resource="org/mybatis/example/BookMapper.xml"/>
+        <!--<mapper resource="org/mybatis/example/BookMapper.xml"/>-->
+        <package name="dao"/>
 
     </mappers>
 
 </configuration>
-
