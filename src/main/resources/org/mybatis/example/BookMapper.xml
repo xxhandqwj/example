@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.BookMapper">
+    <resultMap id="BaseResultMap"  type="entity.BookDO">
+        <id     column="book_id"   property="bookId"   jdbcType="INTEGER"/>
+        <result column="book_name" property="bookName" jdbcType="VARCHAR"/>
+        <result column="price"     property="price"    jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="BaseList">
+        book_id,book_name,price
+    </sql>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="BaseList"  />
+        from Book
+    </select>
+
+    <insert id="saveBook" useGeneratedKeys="true" keyProperty="book_id" parameterType="entity.BookDO">
+        INSERT INTO book
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bookName!=null">
+                book_name,
+            </if>
+            <if test="price!=null">
+                price,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="bookName!=null">
+                #{bookName,jdbcType=VARCHAR},
+            </if>
+            <if test="price!=null">
+                #{price,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="deleteAll" >
+        delete from book
+    </delete>
+
+    <select id="selectById" parameterType="INTEGER" resultMap="BaseResultMap">
+        SELECT
+        <include refid="BaseList"  />
+        FROM book
+        WHERE book_id=#{bookId,jdbcType=VARCHAR}
+    </select>
+
+    <update id="updateById" parameterType="entity.BookDO">
+        UPDATE book
+        <set>
+            <if test="bookName !=null">book_name=#{bookName},</if>
+            <if test="price !=null">price=#{price},</if>
+        </set>
+        WHERE  book_id=#{bookId}
+    </update>
+</mapper>
